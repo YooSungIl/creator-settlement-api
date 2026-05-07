@@ -1,5 +1,6 @@
 package com.liveklass.assignment.sale.controller;
 
+import com.liveklass.assignment.sale.dto.SaleCancelRequest;
 import com.liveklass.assignment.sale.dto.SalePayRequest;
 import com.liveklass.assignment.sale.service.SaleService;
 import jakarta.validation.Valid;
@@ -22,6 +23,12 @@ public class SaleController {
     @PostMapping("/pay")
     public ResponseEntity<Void> pay(@Valid @RequestBody SalePayRequest request) {
         saleService.pay(request);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/cancel")
+    public ResponseEntity<Void> cancel(@Valid @RequestBody SaleCancelRequest request) {
+        saleService.cancel(request);
         return ResponseEntity.ok().build();
     }
 }

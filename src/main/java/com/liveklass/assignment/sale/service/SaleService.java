@@ -1,5 +1,6 @@
 package com.liveklass.assignment.sale.service;
 
+import com.liveklass.assignment.sale.dto.SaleCancelRequest;
 import com.liveklass.assignment.sale.dto.SalePayRequest;
 import com.liveklass.assignment.sale.entity.SaleRecord;
 import com.liveklass.assignment.sale.mapper.SaleMapper;
@@ -36,5 +37,34 @@ public class SaleService {
         saleRecord.setOccurredAt(request.getOccurredAt());
 
         saleMapper.insertSaleRecord(saleRecord);
+    }
+
+    @Transactional
+    public void cancel(SaleCancelRequest request) {
+
+        SaleRecord paidSale = saleMapper.findPaidSaleBySaleNum(request.getSaleNum());
+
+        if (paidSale == null) {
+            throw new IllegalArgumentException("결제 승인 내역이 존재하지 않습니다.");
+        }
+
+        if (saleMapper.existsCanceledSaleBySaleNum(request.getSaleNum()) > 0) {
+            throw new IllegalArgumentException("이미 취소된 판매번호입니다.");
+        }
+
+        if (request.getAmount() > paidSale.getAmount()) {
+            throw new IllegalArgumentException("환불 금액이 결제 금액보다 클 수 없습니다.");
+        }
+
+        SaleRecord canceledSale = new SaleRecord();
+
+        canceledSale.setSaleNum(paidSale.getSaleNum());
+        canceledSale.setCourseId(paidSale.getCourseId());
+        canceledSale.setStudentId(paidSale.getStudentId());
+        canceledSale.setAmount(request.getAmount());
+        canceledSale.setSaleStatus("CANCELED");
+        canceledSale.setOccurredAt(request.getOccurredAt());
+
+        saleMapper.insertSaleRecord(canceledSale);
     }
 }

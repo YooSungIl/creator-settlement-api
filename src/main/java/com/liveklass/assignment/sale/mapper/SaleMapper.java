@@ -10,7 +10,9 @@ public interface SaleMapper {
 
     int existsCourseByCourseId(String courseId);
 
+    int existsCanceledSaleBySaleNum(String saleNum);
+
+    SaleRecord findPaidSaleBySaleNum(String saleNum);
+
     void insertSaleRecord(SaleRecord saleRecord);
-
-
 }
