@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.liveklass.assignment.settlement.mapper.SettlementMapper">
+
+    <select id="findCreatorMonthlySettlement" resultType="com.liveklass.assignment.settlement.dto.CreatorSettlementResponse">
+        SELECT cr.creator_id
+             , cr.creator_nm
+             , COALESCE(SUM(CASE WHEN sr.sale_status = 'PAID' THEN sr.amount ELSE 0 END), 0) AS total_paid_amount
+             , COALESCE(SUM(CASE WHEN sr.sale_status = 'CANCELED' THEN sr.amount ELSE 0 END), 0) AS total_canceled_amount
+             , COALESCE(SUM(CASE WHEN sr.sale_status = 'PAID' THEN sr.amount ELSE -sr.amount END), 0) AS net_sale_amount
+             , COALESCE(SUM(CASE WHEN sr.sale_status = 'PAID' THEN sr.amount ELSE -sr.amount END), 0) * cr.platform_commission / 100 AS platform_commission_amount
+             , COALESCE(SUM(CASE WHEN sr.sale_status = 'PAID' THEN sr.amount ELSE -sr.amount END), 0) * (100 - cr.platform_commission) / 100 AS expected_settlement_amount
+             , COUNT(CASE WHEN sr.sale_status = 'PAID' THEN 1 END) AS paid_count
+             , COUNT(CASE WHEN sr.sale_status = 'CANCELED' THEN 1 END) AS canceled_count
+          FROM creator cr
+         INNER JOIN course c ON cr.creator_id = c.creator_id
+         INNER JOIN sale_record sr ON c.course_id = sr.course_id
+         WHERE cr.creator_id = #{creatorId}
+           AND TO_CHAR(sr.occurred_at, 'YYYY-MM') = #{yearMonth}
+         GROUP BY cr.creator_id, cr.creator_nm, cr.platform_commission
+    </select>
+
+    <select id="findAdminSettlement" resultType="com.liveklass.assignment.settlement.dto.AdminCreatorSettlementResponse">
+        SELECT cr.creator_id
+             , cr.creator_nm
+             , COALESCE(SUM(CASE WHEN sr.sale_status = 'PAID' THEN sr.amount ELSE -sr.amount END), 0) * (100 - cr.platform_commission) / 100 AS expected_settlement_amount
+          FROM creator cr
+         INNER JOIN course c ON cr.creator_id = c.creator_id
+         INNER JOIN sale_record sr ON c.course_id = sr.course_id
+         WHERE sr.occurred_at &gt;= #{fromDate}
+           AND sr.occurred_at &lt; #{toNextDate}
+        GROUP BY cr.creator_id, cr.creator_nm, cr.platform_commission
+        ORDER BY cr.creator_id
+    </select>
+
+</mapper>
