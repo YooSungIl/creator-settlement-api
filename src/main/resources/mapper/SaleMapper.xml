@@ -58,4 +58,32 @@
         )
     </insert>
 
+    <select id="findSaleRecords" resultType="com.liveklass.assignment.sale.dto.SaleRecordResponse">
+        SELECT sr.sale_num
+             , c.creator_id
+             , cr.creator_nm
+             , sr.course_id
+             , c.course_title
+             , sr.student_id
+             , sr.amount
+             , sr.sale_status
+             , sr.occurred_at
+          FROM sale_record sr
+         INNER JOIN course c ON sr.course_id = c.course_id
+         INNER JOIN creator cr ON c.creator_id = cr.creator_id
+         WHERE 1=1
+        <if test="creatorId != null and creatorId != ''">
+           AND c.creator_id = #{creatorId}
+        </if>
+
+        <if test="fromDate != null">
+           AND sr.occurred_at &gt;= #{fromDate}
+        </if>
+
+        <if test="toDate != null">
+           AND sr.occurred_at &lt; #{toDate}
+        </if>
+         ORDER BY sr.occurred_at DESC, sr.sale_serl_num DESC
+    </select>
+
 </mapper>

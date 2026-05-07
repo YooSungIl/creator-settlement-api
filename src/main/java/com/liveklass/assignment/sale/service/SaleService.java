@@ -7,6 +7,11 @@ import com.liveklass.assignment.sale.mapper.SaleMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.liveklass.assignment.sale.dto.SaleRecordResponse;
+
+import java.time.LocalDate;
+import java.util.List;
+
 @Service
 public class SaleService {
 
@@ -66,5 +71,19 @@ public class SaleService {
         canceledSale.setOccurredAt(request.getOccurredAt());
 
         saleMapper.insertSaleRecord(canceledSale);
+    }
+
+    public List<SaleRecordResponse> findSaleRecords(
+            String creatorId,
+            LocalDate fromDate,
+            LocalDate toDate
+    ) {
+        LocalDate toNextDate = null;
+
+        if (toDate != null) {
+            toNextDate = toDate.plusDays(1);
+        }
+
+        return saleMapper.findSaleRecords(creatorId, fromDate, toNextDate);
     }
 }

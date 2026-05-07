@@ -5,10 +5,13 @@ import com.liveklass.assignment.sale.dto.SalePayRequest;
 import com.liveklass.assignment.sale.service.SaleService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import com.liveklass.assignment.sale.dto.SaleRecordResponse;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/sales")
@@ -30,5 +33,21 @@ public class SaleController {
     public ResponseEntity<Void> cancel(@Valid @RequestBody SaleCancelRequest request) {
         saleService.cancel(request);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<SaleRecordResponse>> findSaleRecords(
+            @RequestParam(required = false) String creatorId,
+
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            LocalDate fromDate,
+
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            LocalDate toDate
+    ) {
+        List<SaleRecordResponse> result = saleService.findSaleRecords(creatorId, fromDate, toDate);
+        return ResponseEntity.ok(result);
     }
 }
