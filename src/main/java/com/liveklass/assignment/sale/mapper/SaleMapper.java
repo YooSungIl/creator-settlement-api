@@ -20,6 +20,8 @@ public interface SaleMapper {
 
     SaleRecord findPaidSaleBySaleNum(String saleNum);
 
+    SaleRecord findCanceledSaleBySaleNum(String saleNum);
+
     void insertSaleRecord(SaleRecord saleRecord);
 
     List<SaleRecordResponse> findSaleRecords(

@@ -39,6 +39,20 @@
            AND sale_status = 'PAID'
     </select>
 
+    <select id="findCanceledSaleBySaleNum" resultType="com.liveklass.assignment.sale.entity.SaleRecord">
+        SELECT sale_serl_num
+             , sale_num
+             , course_id
+             , student_id
+             , amount
+             , sale_status
+             , occurred_at
+             , created_at
+          FROM sale_record
+         WHERE sale_num = #{saleNum}
+           AND sale_status = 'CANCELED'
+    </select>
+
     <insert id="insertSaleRecord" parameterType="com.liveklass.assignment.sale.entity.SaleRecord">
         INSERT INTO sale_record (
         sale_num,
