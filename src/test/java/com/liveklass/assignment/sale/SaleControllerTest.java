@@ -21,7 +21,7 @@ class SaleControllerTest {
     private MockMvc mockMvc;
 
     @Test
-    void 존재하지_않는_강의로_결제승인하면_400을_반환한다() throws Exception {
+    void 존재하지_않는_강의로_결제승인하면_400을_반환() throws Exception {
 
         mockMvc.perform(post("/api/sales/pay")
                             .contentType(MediaType.APPLICATION_JSON)
@@ -41,7 +41,7 @@ class SaleControllerTest {
     }
 
     @Test
-    void 이미_결제승인된_판매번호로_결제승인하면_400을_반환한다() throws Exception {
+    void 이미_결제승인된_판매번호로_결제승인하면_400을_반환() throws Exception {
 
         mockMvc.perform(post("/api/sales/pay")
                             .contentType(MediaType.APPLICATION_JSON)
