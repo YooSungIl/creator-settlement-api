@@ -14,4 +14,6 @@ public interface SettlementMapper {
     CreatorSettlementResponse findCreatorMonthlySettlement(@Param("creatorId") String creatorId, @Param("yearMonth") String yearMonth);
 
     List<AdminCreatorSettlementResponse> findAdminSettlement(@Param("fromDate") LocalDate fromDate, @Param("toNextDate") LocalDate toNextDate);
+
+    String findCreatorName(@Param("creatorId") String creatorId);
 }

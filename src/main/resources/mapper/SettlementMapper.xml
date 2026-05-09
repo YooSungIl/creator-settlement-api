@@ -36,4 +36,10 @@
         ORDER BY cr.creator_id
     </select>
 
+    <select id="findCreatorName" resultType="String">
+        SELECT creator_nm
+          FROM creator
+         WHERE creator_id = #{creatorId}
+    </select>
+
 </mapper>

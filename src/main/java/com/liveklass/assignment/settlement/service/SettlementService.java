@@ -19,13 +19,32 @@ public class SettlementService {
     }
 
     public CreatorSettlementResponse findCreatorMonthlySettlement(String creatorId, String yearMonth) {
-        return settlementMapper.findCreatorMonthlySettlement(creatorId, yearMonth);
+        CreatorSettlementResponse response = settlementMapper.findCreatorMonthlySettlement(creatorId, yearMonth);
+
+        if(response == null) {
+            response = new CreatorSettlementResponse();
+            response.setCreatorId(creatorId);
+            response.setCreatorNm(settlementMapper.findCreatorName(creatorId));
+            response.setTotalPaidAmount(0L);
+            response.setTotalCanceledAmount(0L);
+            response.setNetSaleAmount(0L);
+            response.setPlatformCommissionAmount(0L);
+            response.setExpectedSettlementAmount(0L);
+            response.setPaidCount(0L);
+            response.setCanceledCount(0L);
+        }
+
+        return response;
     }
 
     public AdminSettlementResponse findAdminSettlement(LocalDate fromDate, LocalDate toDate) {
         LocalDate toNextDate = toDate.plusDays(1);
 
         List<AdminCreatorSettlementResponse> creators = settlementMapper.findAdminSettlement(fromDate, toNextDate);
+
+        if (creators == null) {
+            creators = List.of();
+        }
 
         long totalExpectedSettlementAmount = creators.stream()
                 .mapToLong(AdminCreatorSettlementResponse::getExpectedSettlementAmount)
