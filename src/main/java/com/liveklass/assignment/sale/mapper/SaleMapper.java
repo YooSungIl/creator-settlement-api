@@ -1,9 +1,8 @@
 package com.liveklass.assignment.sale.mapper;
 
+import com.liveklass.assignment.sale.dto.SaleRecordResponse;
 import com.liveklass.assignment.sale.entity.SaleRecord;
 import org.apache.ibatis.annotations.Mapper;
-
-import com.liveklass.assignment.sale.dto.SaleRecordResponse;
 import org.apache.ibatis.annotations.Param;
 
 import java.time.LocalDate;

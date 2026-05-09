@@ -2,13 +2,12 @@ package com.liveklass.assignment.sale.controller;
 
 import com.liveklass.assignment.sale.dto.SaleCancelRequest;
 import com.liveklass.assignment.sale.dto.SalePayRequest;
+import com.liveklass.assignment.sale.dto.SaleRecordResponse;
 import com.liveklass.assignment.sale.service.SaleService;
 import jakarta.validation.Valid;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import com.liveklass.assignment.sale.dto.SaleRecordResponse;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.util.List;
